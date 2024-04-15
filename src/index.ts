@@ -1,13 +1,13 @@
 #! /usr/bin/env node
 
-const { Command } = require("commander");
-const figlet = require("figlet");
-const fs = require("fs");
-const path = require("path");
+import { Command } from "commander";
+import figlet from 'figlet';
+import fs from "fs";
+import path from "path";
 
 const program = new Command();
 
-console.log(figlet.textSync("Dir Manager"));
+console.log(figlet.textSync("Unnecessary 10ten CLI logo", "Ogre"));
 
 program
   .version("1.0.0")
