@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/figlet": "^1.5.8",
     "@types/node": "^20.12.7",
+    "fake-indexeddb": "^5.0.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
