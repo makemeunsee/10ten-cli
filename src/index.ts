@@ -1,19 +1,9 @@
 #! /usr/bin/env node
 
-// import path from "path";
-
-import "fake-indexeddb/auto";
-
-// const IndexedDB = require('indexeddb');
-// const Destructible = require('destructible');
-
-// const destructible = new Destructible('indexeddb.readme.t');
-
-// const indexedDB = IndexedDB.create(destructible, path.join(__dirname, 'tmp', 'readme'));
-
 import { Command } from "commander";
 import figlet from 'figlet';
 import { initDb, translate } from "./tenten";
+import util from 'util';
 
 const program = new Command();
 
@@ -28,10 +18,10 @@ const options = program.opts();
 if (options.translate) {
   const text = options.translate;
   console.log(text);
-  initDb().then(r => {
+  initDb().then(_ => {
     console.log("translating");
     translate({text: text}).then(r =>
-      console.log("translated: " + r)
+      console.log(util.inspect(r, {depth: null}))
     );
   });
 } else {

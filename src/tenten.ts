@@ -15,23 +15,65 @@ import { normalizeInput } from './normalize-input';
 
 import { GetWordsFunction, wordSearch } from './word-search';
 
-const WORDS_MAX_ENTRIES = 7;
+import fs from 'fs';
+
+import "fake-indexeddb/auto";
+
+type FetchResponse = {
+  status: number,
+  ok: boolean,
+  json: () => any,
+  body: any,
+}
+
+declare global {
+  function fetch(resource: any): any;
+}
+
+global.fetch = function(resource: any): any {
+  let resource_str = resource.toString();
+  console.log("my fetch for " + resource);
+  if (resource_str.endsWith("version-en.json")) {
+    let version = fs.readFileSync('./data/jpdict/reader/version-en.json', 'utf8');
+    const resp: FetchResponse = {
+      status: 200,
+      ok: true,
+      json: () => JSON.parse(version),
+      body: undefined,
+    };
+    return resp;
+  } else {
+    const BASE_URL_OFFSET = "https://data.10ten.life/jpdict/reader/".length;
+    let buffer = fs.readFileSync('./data/' + resource_str.substring(BASE_URL_OFFSET), 'utf8');
+    const resp: FetchResponse = {
+      status: 200,
+      ok: true,
+      json: () => undefined,
+      body: new Response(buffer).body,
+    };
+    return resp;
+  }
+}
 
 export async function initDb(): Promise<void> {
     var db = new JpdictIdb({ verbose: true });
-    // db.addChangeListener(this.doDbStateNotification);
 
     console.log("waiting DB ready");
     await db.ready;
 
-    // TODO fetch everything once manually, load from local copy
-
-    console.log("DB ready, loading words");
+    console.log("DB ready")
+    console.log("loading words");
     await db.update({series: 'words', lang: 'en'});
-    console.log("words loaded, ...");
-    // await db.update({series: 'kanji', lang: 'en'});
+    console.log("words loaded")
+    console.log("loading kanji");
+    await db.update({series: 'kanji', lang: 'en'});
+    console.log("kanji loaded")
+    // console.log("loading names");
     // await db.update({series: 'names', lang: 'en'});
+    // console.log("names loaded");
 }
+
+const WORDS_MAX_ENTRIES = 7;
 
 export async function searchWords({
   input,
@@ -43,14 +85,7 @@ export async function searchWords({
   abortSignal?: AbortSignal;
   includeRomaji?: boolean;
   max?: number;
-}): Promise<
-  // [
-    // result:
-     WordSearchResult | null
-    // ,
-    // dbStatus: 'updating' | 'unavailable' | undefined,
-  // ]
-> {
+}): Promise<WordSearchResult | null> {
   let [word, inputLengths] = normalizeInput(input);
 
   const maxResults =
@@ -60,33 +95,17 @@ export async function searchWords({
   // fallback dictionary.
   let getWords: GetWordsFunction;
   // const dbStatus = getDataSeriesStatus('words');
-  // if (dbStatus === 'ok') {
-    getWords = ({ input, maxResults }: { input: string; maxResults: number }) =>
-      idbGetWords(input, { matchType: 'exact', limit: maxResults });
-  // } else {
-  //   try {
-  //     const flatFileDatabase = await fallbackDatabaseLoader.database;
-  //     getWords = flatFileDatabase.getWords.bind(flatFileDatabase);
-  //     // The IDB database handles kana variations but for the flat file database
-  //     // we need to do it ourselves.
-  //     word = kanaToHiragana(word);
-  //   } catch {
-  //     return [null, dbStatus];
-  //   }
-  // }
+  getWords = ({ input, maxResults }: { input: string; maxResults: number }) =>
+    idbGetWords(input, { matchType: 'exact', limit: maxResults });
 
-  return /* [ */ await wordSearch({
-      abortSignal,
-      getWords,
-      input: word,
-      inputLengths,
-      maxResults,
-      includeRomaji,
-    })
-    // ,
-    // dbStatus !== 'ok' ? dbStatus : undefined,
-  // ]
-    ;
+  return await wordSearch({
+    abortSignal,
+    getWords,
+    input: word,
+    inputLengths,
+    maxResults,
+    includeRomaji,
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -111,11 +130,7 @@ export async function translate({
 
   let skip: number;
   while (text.length > 0) {
-    const 
-    // [
-    searchResult
-    // , dbStatus]
-     = await searchWords({
+    const searchResult = await searchWords({
       input: text,
       max: 1,
       includeRomaji,
@@ -133,10 +148,6 @@ export async function translate({
     } else {
       skip = 1;
     }
-
-    // if (searchResult && dbStatus) {
-    //   result.dbStatus = dbStatus;
-    // }
 
     text = text.substring(skip);
   }
