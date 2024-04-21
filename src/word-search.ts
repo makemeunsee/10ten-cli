@@ -203,9 +203,7 @@ async function lookupCandidate({
   maxResults: number;
   showInflections: boolean;
 }): Promise<Array<WordResult>> {
-  console.log("meh");
   let matches = await getWords({ input: candidate.word, maxResults });
-  console.log("meh2");
 
   // The deinflection code doesn't know anything about the actual words. It just
   // produces possible deinflections along with a type that says what kind of a

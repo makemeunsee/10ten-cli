@@ -1,6 +1,5 @@
 #! /usr/bin/env node
 
-// import fs from "fs";
 // import path from "path";
 
 import "fake-indexeddb/auto";
@@ -26,26 +25,15 @@ program
 
 const options = program.opts();
 
-// async function listDirContents(filepath: string) {
-//   try {
-//     const files = await fs.promises.readdir(filepath);
-//     const detailedFilesPromises = files.map(async (file: string) => {
-//       let fileDetails = await fs.promises.lstat(path.resolve(filepath, file));
-//       const { size, birthtime } = fileDetails;
-//       return { filename: file, "size": size, created_at: birthtime };
-//     });
-//     const detailedFiles = await Promise.all(detailedFilesPromises);
-//     console.table(detailedFiles);
-//   } catch (error) {
-//     console.error("Error occurred while reading the directory!", error);
-//   }
-// }
-
 if (options.translate) {
-  initDb();
   const text = options.translate;
   console.log(text);
-  translate({text: text});
+  initDb().then(r => {
+    console.log("translating");
+    translate({text: text}).then(r =>
+      console.log("translated: " + r)
+    );
+  });
 } else {
   console.log(figlet.textSync("10ten CLI", "Ogre"));
   program.help();

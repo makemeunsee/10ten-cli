@@ -17,12 +17,17 @@ import { GetWordsFunction, wordSearch } from './word-search';
 
 const WORDS_MAX_ENTRIES = 7;
 
-export async function initDb(): Promise<JpdictIdb> {
+export async function initDb(): Promise<void> {
     var db = new JpdictIdb({ verbose: true });
     // db.addChangeListener(this.doDbStateNotification);
 
+    console.log("waiting DB ready");
     await db.ready;
-    return db;
+    console.log("DB ready, loading words");
+    await db.update({series: 'words', lang: 'en'});
+    console.log("words loaded, ...");
+    // await db.update({series: 'kanji', lang: 'en'});
+    // await db.update({series: 'names', lang: 'en'});
 }
 
 export async function searchWords({
@@ -43,7 +48,6 @@ export async function searchWords({
     // dbStatus: 'updating' | 'unavailable' | undefined,
   // ]
 > {
-  console.log("2");
   let [word, inputLengths] = normalizeInput(input);
 
   const maxResults =
@@ -95,7 +99,6 @@ export async function translate({
   text: string;
   includeRomaji?: boolean;
 }): Promise<TranslateResult | null> {
-  console.log("1");
   const result: TranslateResult = {
     type: 'translate',
     data: [],
