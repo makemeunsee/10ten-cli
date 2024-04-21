@@ -23,6 +23,9 @@ export async function initDb(): Promise<void> {
 
     console.log("waiting DB ready");
     await db.ready;
+
+    // TODO fetch everything once manually, load from local copy
+
     console.log("DB ready, loading words");
     await db.update({series: 'words', lang: 'en'});
     console.log("words loaded, ...");
