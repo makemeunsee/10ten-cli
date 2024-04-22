@@ -1,5 +1,5 @@
 {
-  "name": "node_ts",
+  "name": "ten10-cli",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPL3",
   "devDependencies": {
     "@types/figlet": "^1.5.8",
     "@types/node": "^20.12.7",

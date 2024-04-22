@@ -32,19 +32,19 @@ declare global {
 
 global.fetch = function(resource: any): any {
   let resource_str = resource.toString();
-  console.log("my fetch for " + resource);
+  const BASE_URL_OFFSET = "https://data.10ten.life/jpdict/reader/".length;
+  let local_resource = './data/' + resource_str.substring(BASE_URL_OFFSET);
+  let buffer = fs.readFileSync(local_resource, 'utf8');
+  console.log("fetching " + local_resource);
   if (resource_str.endsWith("version-en.json")) {
-    let version = fs.readFileSync('./data/jpdict/reader/version-en.json', 'utf8');
     const resp: FetchResponse = {
       status: 200,
       ok: true,
-      json: () => JSON.parse(version),
+      json: () => JSON.parse(buffer),
       body: undefined,
     };
     return resp;
   } else {
-    const BASE_URL_OFFSET = "https://data.10ten.life/jpdict/reader/".length;
-    let buffer = fs.readFileSync('./data/' + resource_str.substring(BASE_URL_OFFSET), 'utf8');
     const resp: FetchResponse = {
       status: 200,
       ok: true,
