@@ -29,6 +29,25 @@ ten10-cli -t 行きましょう -a
 node dist/index.js -t 優勝 -a
 ```
 
+## On-screen translation snippet
+
+The translation is shown in a notification and is copied to clipboard too.
+
+```bash
+#!/bin/bash
+
+maim -s |
+mogrify -modulate 100,0 -resize 200% png:- |
+tesseract -l jpn - - |
+tr -d " " |
+xclip -selection clipboard -i
+
+TEXT=$(xclip -selection clipboard -o)
+notify-send -a "10ten-cli" " " "$(ten10-cli -a -t $TEXT)"
+
+exit
+```
+
 ## Limitations
 
 * Only word translation works so far, no kanji details lookup or other more advanced features of 10ten.
