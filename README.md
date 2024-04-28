@@ -40,9 +40,9 @@ ten10-cli -t 行きましょう -a
 node dist/index.js -t 優勝 -a
 ```
 
-## Screen space translation
+## Screen space translation assistant
 
-Combining `10ten-cli` with [screen capture](https://github.com/naelstrof/maim), [image processing](https://imagemagick.org/) and [OCR](https://github.com/tesseract-ocr/tesseract), a crude yet effective screen space translation can be assembled:
+Combining `10ten-cli` with [screen capture](https://github.com/naelstrof/maim), [image processing](https://imagemagick.org/) and [OCR](https://github.com/tesseract-ocr/tesseract), a crude yet effective screen space translation assistant can be assembled:
 
 ```bash
 #!/bin/bash
