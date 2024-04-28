@@ -1,9 +1,20 @@
-# CLI port 10ten, heavy WIP
+# 10ten-cli
+
+## Description
+
+`10ten-cli` is a modification of the [10ten browser extension](https://github.com/birchill/10ten-ja-reader/), to turn it into Command Line Interface (CLI) tool.
+
+Its intended purpose is on the fly translation of screen space Japanese text (e.g. in an image or in a video game), through its composition with other CLI tools (most notably [`tesseract`](https://github.com/tesseract-ocr/tesseract)).
+
+## Demo
+
+https://github.com/makemeunsee/10ten-cli/assets/180648/cca971ab-6ac4-4861-8570-3e131ab2f5bb
 
 ## Pre-requisites
 
-A snapshot of 10ten's words database, available under `~/.local/share/10ten-cli/data/`.  
-See https://github.com/birchill/10ten-ja-reader/tree/main/data.
+* `node`, version 18+
+* A snapshot of `10ten`'s words database, stored in the `~/.local/share/10ten-cli/data/` directory.  
+The required files are packaged with the original `10ten`: https://github.com/birchill/10ten-ja-reader/tree/main/data.
 
 ## Building
 
@@ -29,9 +40,9 @@ ten10-cli -t 行きましょう -a
 node dist/index.js -t 優勝 -a
 ```
 
-## On-screen translation snippet
+## Screen space translation
 
-The translation is shown in a notification and is copied to clipboard too.
+Combining `10ten-cli` with [screen capture](https://github.com/naelstrof/maim), [image processing](https://imagemagick.org/) and [OCR](https://github.com/tesseract-ocr/tesseract), a crude yet effective screen space translation can be assembled:
 
 ```bash
 #!/bin/bash
@@ -48,9 +59,11 @@ notify-send -a "10ten-cli" " " "$(ten10-cli -a -t $TEXT)"
 exit
 ```
 
+[`dunst`](https://dunst-project.org/) is used as notification daemon in the demo above.
+
 ## Limitations
 
-* Only word translation works so far, no kanji details lookup or other more advanced features of 10ten.
+* Only word translation are supported yet, not the kanji details lookup or other more advanced features of 10ten.
 
 ## License
 
