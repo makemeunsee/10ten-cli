@@ -21,16 +21,17 @@ npm install . -g
 
 ```sh
 # after installing
+ten10-cli -h
 ten10-cli -t 行きましょう
+ten10-cli -t 行きましょう -a
 
 # or after just building
-node dist/index.js -t 優勝
+node dist/index.js -t 優勝 -a
 ```
 
 ## Limitations
 
-* Only word translation works so far, no kanji details lookup.
-* Output is not groomed
+* Only word translation works so far, no kanji details lookup or other more advanced features of 10ten.
 
 ## License
 
