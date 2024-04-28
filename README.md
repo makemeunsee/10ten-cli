@@ -2,7 +2,7 @@
 
 ## Description
 
-`10ten-cli` is a modification of the [10ten browser extension](https://github.com/birchill/10ten-ja-reader/), to turn it into Command Line Interface (CLI) tool.
+`10ten-cli` is a modification of the [10ten browser extension](https://github.com/birchill/10ten-ja-reader/), to turn it into a Command Line Interface (CLI) tool.
 
 Its intended purpose is on the fly translation of screen space Japanese text (e.g. in an image or in a video game), through its composition with other CLI tools (most notably [`tesseract`](https://github.com/tesseract-ocr/tesseract)).
 
@@ -63,7 +63,7 @@ exit
 
 ## Limitations
 
-* Only word translation are supported yet, not the kanji details lookup or other more advanced features of 10ten.
+* Only word translations are supported yet, not the kanji details lookup or other more advanced features of 10ten.
 
 ## License
 
