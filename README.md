@@ -2,24 +2,8 @@
 
 ## Pre-requisites
 
-The app currently intercepts fetches to `https://data.10ten.life/` and insteads attempts to load the data a local `data` directory.  
-This `data` directory must be prepared prior to running the app, and looks like:
-
-```sh
-# version file
-data/version-en.json
-# kanji file
-data/kanji/en/4.1.47.jsonl
-# radical file
-data/radicals/en/4.1.1.jsonl
-# words files
-data/words/en/2.0.258-*.jsonl
-# names files
-data/names/en/3.0.291-*.jsonl
-```
-
-The exact file names and count depend on the version fetched.  
-The files must be 'unbrotlied' for the app to read them.
+A snapshot of 10ten's words database, available under `~/.local/share/10ten-cli/data/`.  
+See https://github.com/birchill/10ten-ja-reader/tree/main/data.
 
 ## Building
 
@@ -37,7 +21,7 @@ npm install . -g
 
 ```sh
 # after installing
-# ten10-cli # currently broken, `data/` expected under the current working dir
+ten10-cli -t 行きましょう
 
 # or after just building
 node dist/index.js -t 優勝
@@ -46,7 +30,7 @@ node dist/index.js -t 優勝
 ## Limitations
 
 * Only word translation works so far, no kanji details lookup.
-* It takes minute for the app to init the DB, and it is done *on each run*, so it is not usable yet.
+* Output is not groomed
 
 ## License
 

@@ -2,7 +2,7 @@
 
 import { Command } from "commander";
 import figlet from 'figlet';
-import { initDb, translate } from "./tenten";
+import { translate } from "./tenten";
 import util from 'util';
 
 const program = new Command();
@@ -18,12 +18,9 @@ const options = program.opts();
 if (options.translate) {
   const text = options.translate;
   console.log(text);
-  initDb().then(_ => {
-    console.log("translating");
-    translate({text: text}).then(r =>
-      console.log(util.inspect(r, {depth: null}))
-    );
-  });
+  translate({text: text}).then(r =>
+    console.log(util.inspect(r, {depth: null}))
+  );
 } else {
   console.log(figlet.textSync("10ten CLI", "Ogre"));
   program.help();

@@ -1,77 +1,16 @@
 import {
-  // getKanji,
-  getWords as idbGetWords,
-  JpdictIdb,
-} from '@birchill/jpdict-idb';
-
-import {
   // KanjiSearchResult,
   // NameSearchResult,
   TranslateResult,
   WordSearchResult,
 } from './search-result';
 
+import { FlatFileDatabase } from './flat-file';
+
 import { normalizeInput } from './normalize-input';
+import { kanaToHiragana } from '@birchill/normal-jp';
 
 import { GetWordsFunction, wordSearch } from './word-search';
-
-import fs from 'fs';
-
-import "fake-indexeddb/auto";
-
-type FetchResponse = {
-  status: number,
-  ok: boolean,
-  json: () => any,
-  body: any,
-}
-
-declare global {
-  function fetch(resource: any): any;
-}
-
-global.fetch = function(resource: any): any {
-  let resource_str = resource.toString();
-  const BASE_URL_OFFSET = "https://data.10ten.life/jpdict/reader/".length;
-  let local_resource = './data/' + resource_str.substring(BASE_URL_OFFSET);
-  let buffer = fs.readFileSync(local_resource, 'utf8');
-  console.log("fetching " + local_resource);
-  if (resource_str.endsWith("version-en.json")) {
-    const resp: FetchResponse = {
-      status: 200,
-      ok: true,
-      json: () => JSON.parse(buffer),
-      body: undefined,
-    };
-    return resp;
-  } else {
-    const resp: FetchResponse = {
-      status: 200,
-      ok: true,
-      json: () => undefined,
-      body: new Response(buffer).body,
-    };
-    return resp;
-  }
-}
-
-export async function initDb(): Promise<void> {
-    var db = new JpdictIdb({ verbose: true });
-
-    console.log("waiting DB ready");
-    await db.ready;
-
-    console.log("DB ready")
-    console.log("loading words");
-    await db.update({series: 'words', lang: 'en'});
-    console.log("words loaded")
-    console.log("loading kanji");
-    await db.update({series: 'kanji', lang: 'en'});
-    console.log("kanji loaded")
-    // console.log("loading names");
-    // await db.update({series: 'names', lang: 'en'});
-    // console.log("names loaded");
-}
 
 const WORDS_MAX_ENTRIES = 7;
 
@@ -95,8 +34,13 @@ export async function searchWords({
   // fallback dictionary.
   let getWords: GetWordsFunction;
   // const dbStatus = getDataSeriesStatus('words');
-  getWords = ({ input, maxResults }: { input: string; maxResults: number }) =>
-    idbGetWords(input, { matchType: 'exact', limit: maxResults });
+  // getWords = ({ input, maxResults }: { input: string; maxResults: number }) =>
+  // idbGetWords(input, { matchType: 'exact', limit: maxResults });
+  const flatFileDatabase = new FlatFileDatabase();
+  getWords = flatFileDatabase.getWords.bind(flatFileDatabase);
+  // The IDB database handles kana variations but for the flat file database
+  // we need to do it ourselves.
+  word = kanaToHiragana(word);
 
   return await wordSearch({
     abortSignal,
