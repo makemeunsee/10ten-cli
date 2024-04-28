@@ -55,4 +55,4 @@ exit
 ## License
 
 So far, most of the code is re-used from [`10ten-ja-reader`](https://github.com/birchill/10ten-ja-reader), under GPL3 licensing.  
-GPL3 applies to all code within this code.
+GPL3 applies to all code within this repo.
